@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "openmrs-helm.fullname" . }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "openmrs-helm.selectorLabels" . | nindent 6 }}
+  serviceName: {{ include "openmrs-helm.fullname" . }}
+  replicas: 1 # by default is 1
+  template:
+    metadata:
+      labels:
+       {{- include "openmrs-helm.selectorLabels" . | nindent 8 }}
+    spec:
+       terminationGracePeriodSeconds: 10
+       containers:
+       - name: "{{ include "openmrs-helm.fullname" . }}-web"
+         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+         env:
+         - name: DB_AUTO_UPDATE
+           value: "{{ .Values.env.dbAutoUpdate }}"
+         - name: DB_CREATE_TABLES
+           value: "{{ .Values.env.dbCreateTables }}"
+         - name: DB_DATABASE
+           value: "{{ .Values.env.dbDatabase }}"
+         - name: DB_HOST
+           value: "{{.Release.Name}}-mysql.{{.Release.Namespace}}.svc.cluster.local"
+         - name: DB_PASSWORD
+           value: "{{ .Values.env.dbPassword }}"
+         - name: DB_USERNAME
+           value: "{{ .Values.env.dbUsername }}"
+         - name: MODULE_WEB_ADMIN
+           value:  "{{ .Values.env.moduleWebAdmin }}"
+        
+         ports:
+         - containerPort: 8080
+           name: http
+         resources: {}
+         volumeMounts:
+         - mountPath: /usr/local/tomcat/.OpenMRS/
+           name: openmrs-data
+         - mountPath: /usr/local/tomcat/.OpenMRS/modules/
+           name: openmrs-modules
+         - mountPath: /usr/local/tomcat/.OpenMRS/owa/
+           name: openmrs-owa
+  volumeClaimTemplates:
+  - metadata:
+      name: "openmrs-owa"
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 5Gi
+  - metadata:
+      name: "openmrs-data"
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 5Gi
+  - metadata:
+      name: "openmrs-modules"
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 5Gi
