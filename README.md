@@ -1,6 +1,6 @@
 ## OpenMRS Kubernetes Chart
 
-This is helm chart for kubernetes that deploys https://hub.docker.com/r/openmrs/openmrs-reference-application-distro to kubernetes it should work with https://hub.docker.com/r/openmrs/openmrs-distro-platform or any distro generated via OpenmrsSDK it bundles mysql and is meant to be a turnkey deployment. The chart used https://github.com/bitnami/charts/tree/master/bitnami/mysql/#installing-the-chart as a subchart so you can check it out in the link above.
+This is a helm  chart for kubernetes that deploys https://hub.docker.com/r/openmrs/openmrs-reference-application-distro to kubernetes it should work with https://hub.docker.com/r/openmrs/openmrs-distro-platform or any distro generated via OpenmrsSDK it bundles mysql and is meant to be a turnkey deployment. The chart uses https://github.com/bitnami/charts/tree/master/bitnami/mysql/#installing-the-chart as a subchart so you can check it out in the link above.
 ### Minimum requirements to run
 
 Create a values file
