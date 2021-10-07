@@ -9,6 +9,5 @@ spec:
   ports:
     - port: {{ .Values.service.port }}
       name: http
-  clusterIP: None
   selector:
     {{- include "openmrs-helm.selectorLabels" . | nindent 4 }}
